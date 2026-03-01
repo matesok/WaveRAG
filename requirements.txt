@@ -1,0 +1,10 @@
+langchain
+langchain-text-splitters
+langchain-community
+langchain-ollama
+langchain-chroma
+unstructured
+chromadb==0.6.3
+markdown
+fastapi
+uvicorn
