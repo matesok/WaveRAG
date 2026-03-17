@@ -1,10 +1,11 @@
 services:
   ollama:
     image: ollama/ollama:latest
+    mem_limit: 6g
     container_name: ollama
     ports:
       - "11434:11434"
-    entrypoint: [ "/bin/sh", "-c", "ollama serve & sleep 10 && ollama pull llama3.2 && ollama pull nomic-embed-text && wait" ]
+    entrypoint: [ "/bin/sh", "-c", "ollama serve & sleep 10 && ollama pull llama3.2 && ollama pull mxbai-embed-large && wait" ]
     volumes:
       - ollama_data:/root/.ollama
     healthcheck:
@@ -14,8 +15,16 @@ services:
       retries: 10
       start_period: 30s
     restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
   rag:
     container_name: 'rag'
+    mem_limit: 4g
     ports:
       - "8000:8000"
     environment:

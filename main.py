@@ -31,8 +31,13 @@ def configure_logging():
 
 @app.on_event("startup")
 async def startup():
-    if get_db() is None:
+    db = get_db()
+
+    if db is None:
+        logging.info("DB empty, loading documents...")
         load_and_store_documents()
+    else:
+        logging.info(f"DB already has {db._collection.count()} chunks, skipping ingestion")
 
 
 configure_logging()
