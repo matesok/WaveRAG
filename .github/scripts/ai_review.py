@@ -1,6 +1,6 @@
 import os
 import sys
-from google import genai
+from openai import OpenAI
 
 MAX_DIFF_CHARS = 30_000
 
@@ -41,17 +41,19 @@ def run_ai_review(diff: str, pr_title: str, pr_author: str):
         print("LLM_KEY environment variable not set. Please set it to your language model API key.")
         sys.exit(1)
 
-    client = genai.Client(api_key=llm_key)
-
-    response = client.models.generate_content(
-        model="gemini-2.0-flash-lite",
-        contents=build_prompt(diff, pr_title, pr_author),
+    client = OpenAI(
+        api_key=llm_key,
+        base_url="https://api.groq.com/openai/v1"
     )
 
-    review_text = response.text
-    print("Review generated successfully.")
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        max_tokens=1024,
+        messages=[{"role": "user", "content": build_prompt(diff, pr_title, pr_author)}]
+    )
 
-    return review_text
+    print("Review generated successfully.")
+    return response.choices[0].message.content
 
 
 def save_comment(review: str, pr_number: str) -> None:
