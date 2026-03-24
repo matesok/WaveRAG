@@ -39,6 +39,7 @@ async def startup():
     else:
         logging.info(f"DB already has {db._collection.count()} chunks, skipping ingestion")
 
+    raise      Exception("    Startup complete, exiting to prevent server from running. Remove this line to start the server.")
 
 configure_logging()
 
