@@ -44,7 +44,7 @@ def run_ai_review(diff: str, pr_title: str, pr_author: str):
     client = genai.Client(api_key=llm_key)
 
     response = client.models.generate_content(
-        model="gemini-1.5-flash",
+        model="gemini-2.0-flash-lite",
         contents=build_prompt(diff, pr_title, pr_author),
     )
 
