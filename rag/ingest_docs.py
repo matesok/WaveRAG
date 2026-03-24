@@ -9,7 +9,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter, MarkdownTex
 from rag.db import load_documents_to_db
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ZIP_PATH = os.path.join(BASE_DIR, "documents", "sdlc_doc.zip")
+ZIP_PATH = os.path.join(BASE_DIR, "documents", "dokumenty.zip")
 
 def clean_document(doc):
     content = re.sub(r'^---.*?---\s*', '', doc.page_content, flags=re.DOTALL)
@@ -28,12 +28,12 @@ def load_and_store_documents():
         logging.info('Loaded markdown documents: %s', len(markdown_docs))
         for doc in markdown_docs:
             print(doc.metadata['source'])
-        pdf_docs = PyPDFDirectoryLoader(tmpdir).load()
-        logging.info('Loaded pdf documents: %s', len(pdf_docs))
+        # pdf_docs = PyPDFDirectoryLoader(tmpdir).load()
+        # logging.info('Loaded pdf documents: %s', len(pdf_docs))
 
-        markdown_chunks = MarkdownTextSplitter(chunk_size=1000, chunk_overlap=100).split_documents(markdown_docs)
-        pdf_chunks = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100).split_documents(pdf_docs)
+        markdown_chunks = MarkdownTextSplitter(chunk_size=500, chunk_overlap=50).split_documents(markdown_docs)
+        # pdf_chunks = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100).split_documents(pdf_docs)
 
-    total_chunks = markdown_chunks + pdf_chunks
+    total_chunks = markdown_chunks
     logging.info('Total chunks: %s', len(total_chunks))
     load_documents_to_db(total_chunks)
